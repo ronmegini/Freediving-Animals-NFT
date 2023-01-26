@@ -5,7 +5,7 @@ import random
 # JSON format
 JSON_FORMAT = '{"name": "<name>","description": "<name> <description>","image": "ipfs://<images_cid>/<name>.png","attributes": [{"name":"rarity","value": "<random>"}]}'
 
-IMAGE_CID=""
+IMAGE_CID="QmNxF244BD3JRTDTd7u5mbski67BAGTNwN3EcUT18vNR67"
 DESCRIPTION = "free diving"
 
 # Assign directory
@@ -15,6 +15,7 @@ json_directory = f'{current_dir}/json'
 
 
 # Iterate over pngs and create json file
+token_id=1
 for filename in os.listdir(png_directory):
         json_string = JSON_FORMAT
         size = len(filename)
@@ -23,5 +24,6 @@ for filename in os.listdir(png_directory):
         json_string = json_string.replace("<description>", DESCRIPTION)
         json_string = json_string.replace("<images_cid>", IMAGE_CID)
         json_string = json_string.replace("<random>", str(random.randint(1,10)))
-        with open(f'{json_directory}/{name}.json', 'w') as json_file:
+        with open(f'{json_directory}/{token_id}.json', 'w') as json_file:
             json_file.write(json_string)
+        token_id+=1

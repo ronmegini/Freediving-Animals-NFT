@@ -3,13 +3,13 @@
     "configurations": [
         {
             "name": "web",
-            "program": "freediving_animals_mint/lib/main.dart",
+            "program": "freediving_animals_mint/bin/main.dart",
             "request": "launch",
             "type": "dart",
             "args": [
                 "--web-port=5000",
                 "--web-enable-expression-evaluation"
-            ]
-        }
+            ],
+        },
     ]
 }

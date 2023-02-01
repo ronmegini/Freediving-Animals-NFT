@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_web3/ethereum.dart';
 
 class MetaMaskProvider extends ChangeNotifier {
-  static const operatingChain = 4;
+  // Ethereum chain
+  //static const operatingChain = 4;
+  // Mumbai chain
+  static const operatingChain = 80001;
   String currentAddress = '';
   var account = "";
   int currentChain = -1;
@@ -13,16 +16,16 @@ class MetaMaskProvider extends ChangeNotifier {
   Future<void> connect() async {
     if (isEnabled) {
       final accs = await ethereum!.requestAccount();
-      debugPrint("***********************************");
-      debugPrint(accs[0]);
-      debugPrint("***********************************");
-      account = accs[0];
-
-      if (accs.isNotEmpty) currentAddress = accs.first;
-
       currentChain = await ethereum!.getChainId();
-
-      notifyListeners();
+      if (isInOperatingChain) {
+        debugPrint("Correct chain: " + currentChain.toString());
+        account = accs[0];
+        if (accs.isNotEmpty) currentAddress = accs.first;
+        debugPrint("Account: " + currentAddress);
+        notifyListeners();
+      } else {
+        debugPrint("Wrong Chain!");
+      }
     }
   }
 

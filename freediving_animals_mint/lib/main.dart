@@ -108,6 +108,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                           ),
                                           Row(
                                             children: [
+                                              MaterialButton(
+                                                  shape: const CircleBorder(),
+                                                  color: Colors.blue,
+                                                  child: const Icon(
+                                                    Icons.refresh,
+                                                    color: Colors.white,
+                                                  ),
+                                                  onPressed: () async {
+                                                    await mintRequest();
+                                                  }),
+                                              /*
                                               IconButton(
                                                 onPressed: () {
                                                   _copytext(text);
@@ -121,6 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 style: TextStyle(
                                                     color: Colors.white60),
                                               ),
+                                            */
                                             ],
                                           ),
                                         ],

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_web3/ethereum.dart';
 import 'package:flutter_web3/flutter_web3.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
 class MetaMaskProvider extends ChangeNotifier {
   // Ethereum chain
@@ -50,24 +51,6 @@ class MetaMaskProvider extends ChangeNotifier {
   }
 }
 
-/*
-Future<String> _mintNFT(
-    String collectionAddress, String dataURI, String contractABI) async {
-  //Getting the contract deployed
-  Contract deployedContract =
-      Contract(collectionAddress, contractABI, provider!.getSigner());
-
-  //Send the function and data to interact with the contract
-  final transaction = await deployedContract.send('mint', [dataURI]);
-
-  //Getting the receipt from the transaction
-  final receipt = await transaction.wait();
-
-  //Returning the transaction hash
-  return receipt.transactionHash;
-}
-*/
-
 Future<String> mintRequest() async {
   debugPrint("Enter mintRequest()");
   await dotenv.load(fileName: ".env");
@@ -96,12 +79,15 @@ class NFTContract {
   late Contract contractInstance;
 
   NFTContract({required this.collectionAddress, required this.contractABI}) {
+    debugPrint("Class properties: " + collectionAddress + contractABI);
     createContractInstance();
   }
 
   void createContractInstance() {
+    debugPrint("createContractInstance() started");
     contractInstance =
         Contract(collectionAddress, contractABI, provider?.getSigner());
+    debugPrint("createContractInstance() finished");
   }
 
   Future<String> _mintNFT(String collectionAddress, String contractABI) async {

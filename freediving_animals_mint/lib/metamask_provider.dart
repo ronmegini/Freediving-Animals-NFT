@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_web3/ethereum.dart';
+import 'package:flutter_web3/flutter_web3.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MetaMaskProvider extends ChangeNotifier {
   // Ethereum chain
@@ -23,6 +25,7 @@ class MetaMaskProvider extends ChangeNotifier {
         if (accs.isNotEmpty) currentAddress = accs.first;
         debugPrint("Account: " + currentAddress);
         notifyListeners();
+        //NFTContract nftContractInstance = NFTContract();
       } else {
         debugPrint("Wrong Chain!");
       }
@@ -44,5 +47,71 @@ class MetaMaskProvider extends ChangeNotifier {
         clear();
       });
     }
+  }
+}
+
+/*
+Future<String> _mintNFT(
+    String collectionAddress, String dataURI, String contractABI) async {
+  //Getting the contract deployed
+  Contract deployedContract =
+      Contract(collectionAddress, contractABI, provider!.getSigner());
+
+  //Send the function and data to interact with the contract
+  final transaction = await deployedContract.send('mint', [dataURI]);
+
+  //Getting the receipt from the transaction
+  final receipt = await transaction.wait();
+
+  //Returning the transaction hash
+  return receipt.transactionHash;
+}
+*/
+
+Future<String> mintRequest() async {
+  debugPrint("Enter mintRequest()");
+  await dotenv.load(fileName: ".env");
+
+  final String collectionAddress = dotenv.env['COLLECTION_ADDRESS'].toString();
+  final contractABI = dotenv.env['ABI'].toString();
+  debugPrint("Data loaded from .env: " + collectionAddress + contractABI);
+
+  //Create NFT contract instance
+  NFTContract nftContractInstance = NFTContract(
+      collectionAddress: collectionAddress, contractABI: contractABI);
+  debugPrint("NFT contract instance created");
+
+  //Mint NFT
+  final mint_response =
+      nftContractInstance._mintNFT(collectionAddress, contractABI);
+
+  debugPrint("Mint response: " + mint_response.toString());
+
+  return mint_response;
+}
+
+class NFTContract {
+  String collectionAddress;
+  dynamic contractABI;
+  late Contract contractInstance;
+
+  NFTContract({required this.collectionAddress, required this.contractABI}) {
+    createContractInstance();
+  }
+
+  void createContractInstance() {
+    contractInstance =
+        Contract(collectionAddress, contractABI, provider?.getSigner());
+  }
+
+  Future<String> _mintNFT(String collectionAddress, String contractABI) async {
+    //Send the function and data to interact with the contract
+    final transaction = await contractInstance.send('mint', []);
+
+    //Getting the receipt from the transaction
+    final receipt = await transaction.wait();
+
+    //Returning the transaction hash
+    return receipt.transactionHash;
   }
 }
